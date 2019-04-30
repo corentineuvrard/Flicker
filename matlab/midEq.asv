@@ -1,0 +1,32 @@
+function m = midEq(I)
+[x, y, P] = size(I);
+H = zeros(256, 1, P);
+
+multiWaitbar('lancement de l algorithme midEq', 0);
+pause(3.5);
+
+for p = 1 : P
+    H(:, :, p) = hist_cumul(I(:, :, p));
+    multiWaitbar('lancement de l algorithme midEq', 'Value', (p / P) / 3);
+end
+
+midH = ones(x * y, 1);
+for p = 1 : P
+    for i = 1: x * y
+        midH(i) = midH(i) + inverse(H(:, :, p), i);
+        multiWaitbar('lancement de l algorithme midEq', 'Value', (p / P) / 3);
+    end
+end
+midH = round(midH / P);
+m = zeros(x, y, P);
+for p = 1 : P
+    h = H(:, :, p);
+    img = I(:, :, p);
+    for i = 1: x
+        for j = 1: y
+            m(i, j, p) = midH(h(img(i, j) + 1));
+        end
+    end
+end
+m = uint8(m);
+end

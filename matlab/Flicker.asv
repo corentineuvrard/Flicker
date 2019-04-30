@@ -1,0 +1,30 @@
+function r = Flicker(vid, seconds)
+
+v_in = VideoReader(vid);
+name = append('../out/out_', v_in.Name);
+
+v_out = VideoWriter(fullfile(name));
+open(v_out);
+v_out.FrameRate = v_in.FrameRate;
+
+seconds = seconds * v_in.FrameRate;
+percent = 0;
+
+w = waitbar(percent, '--- Initialization --- \n');
+
+while size(seconds, 2) > 1
+    waitbar(seconds(1), '--- récuperation des frames ---\n');
+    frames = getFrames(v_in, seconds(1) + 1, seconds(2));
+    
+    fprintf(seconds(1)'--- lancement de l algorithme midEq ---\n');
+    r = midEq(frames);
+    
+    fprintf('--- récreation de la vidéo ---\n');
+    for i = 1 : size(r, 3)
+    writeVideo(v_out, r(:, :, i));
+    end
+    seconds(1) = [];
+
+end
+close(v_out);
+end

@@ -1,0 +1,14 @@
+function im = getFrames(vid, s, e)
+x = vid.Height;
+y = vid.Width;
+
+multiWaitbar('--- récuperation des frames ---\n', 0);
+
+im = uint8(zeros(x, y, floor(e - s)));
+j = 1;
+for i = s : e
+    multiWait
+    im(:, :, j) = readIndex(vid, i);  %frames are grayscale
+   j = j + 1;
+end
+end
